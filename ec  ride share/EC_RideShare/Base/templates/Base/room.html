@@ -1,0 +1,69 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <header class="page-header">
+        <h1>#{{ room.name }}</h1>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar: List of all rooms -->
+        <aside class="sidebar">
+            <h3>Available Chat Rooms</h3>
+            {% for room in rooms %}
+            <div class="room-link">
+                <a href="{% url 'room' room.id %}" class="button-sidebar">{{ room.name }}</a>
+            </div>
+            {% endfor %}
+        </aside>
+
+        <!-- Main Chat Area -->
+        <section class="chat-area">
+            <!-- Chat messages -->
+            <div class="chat-box">
+                {% if not chat %}
+                <div class="no-messages">
+                    <p>No messages yet. Start chatting!</p>
+                </div>
+                {% endif %}
+                {% for message in chat %}
+                <div class="chat-message">
+                    <p><strong>@{{ message.user }}</strong>: {{ message.text }}</p>
+                    <p class="date">{{ message.created }}</p>
+                    {% if request.user == message.user %}
+                    <div class="message-actions">
+                        <a href="{% url 'delete' message.id %}" class="button-action">Delete</a>
+                        {% if editID == message.id|stringformat:"s" %}
+                        <form method="POST" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="message_id" value="{{ message.id }}">
+                            <input type="text" name="text" value="{{ message.text }}" required>
+                            <button type="submit" name="edit_message" class="button-action">Save</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="message_id" value="{{ message.id }}">
+                            <button type="submit" name="edit_message" class="button-action">Edit</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Message Input Form -->
+            <form method="POST" class="form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="message">Your Message:</label>
+                    <input type="text" name="text" id="message" placeholder="Type your message..." required>
+                </div>
+                <button type="submit" name="send_message" class="button">Send</button>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "main.html" %} {% block content %}
+<div class="container">
+  <header class="page-header">
+    <h1>Create a Ride Listing</h1>
+  </header>
+
+  <form method="POST" class="form">
+    {% csrf_token %} {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }} {% if field.errors %}
+      <div class="form-error">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="button">Submit Listing</button>
+  </form>
+</div>
+{% endblock %}

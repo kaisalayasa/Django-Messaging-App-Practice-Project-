@@ -1,0 +1,22 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo or Home Link -->
+    <a href="/" class="navbar-logo">Earlham App</a>
+
+    <!-- Navigation Links -->
+    <div class="navbar-links">
+      {% if user.is_authenticated %}
+      <div class="navbar-user">
+        <a href="{% url 'updateProfile' %}" class="button-navbar"
+          >{{ request.user }}</a
+        >
+        <a href="{% url 'signout' %}" class="button-navbar">Logout</a>
+      </div>
+      {% else %}
+      <div class="navbar-guest">
+        <a href="{% url 'login' %}" class="button-navbar">Login</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>
